@@ -5,9 +5,11 @@ title: James (Jay) Tuley
 
 
 <div class="thumbnails">
-<img class="thumbnail" src="http://www.gravatar.com/avatar/{{site.gravatar}}.png?s=200">
-h3. jay+website@@tuley.name
-p. Saint Louis, MO
+  <img class="thumbnail" src="http://www.gravatar.com/avatar/{{site.gravatar}}.png?s=200">
+  h3. jay+website@@tuley.name
+
+  p. Saint Louis, MO
+
 </div>
 
 Testing 1..2..3
