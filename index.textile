@@ -4,10 +4,14 @@ title: James (Jay) Tuley
 ---
 
 
-div(thumbnails).
-(thumbnail). !http://www.gravatar.com/avatar/{{site.gravatar}}.png?s=200(Jay Tuley)!  
+<div class="thumbnails">
+!(thumbnail).http://www.gravatar.com/avatar/{{site.gravatar}}.png?s=200(Jay Tuley)!
+
 h3. jay+website@@tuley.name
+
 p. Saint Louis, MO
+
+</div>
 
 
 Testing 1..2..3
