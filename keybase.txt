@@ -1,0 +1,65 @@
+==================================================================
+https://keybase.io/jbtule
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://jay.tuley.name
+  * I am jbtule (https://keybase.io/jbtule) on keybase.
+  * I have a public key with fingerprint 3D0C 3B0C 41D8 A997 9363  F5A9 264F 726E 62F0 9646
+
+To claim this, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "fingerprint": "3d0c3b0c41d8a9979363f5a9264f726e62f09646",
+            "host": "keybase.io",
+            "key_id": "264f726e62f09646",
+            "uid": "05fa6371d3ce0bb8e676befdcd7cd600",
+            "username": "jbtule"
+        },
+        "service": {
+            "hostname": "jay.tuley.name",
+            "protocol": "http:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1411526235,
+    "expire_in": 157680000,
+    "prev": "d235c30b193fe8162b540f054bb07cccbc5d43ef670e1e389cd28141526882f1",
+    "seqno": 6,
+    "tag": "signature"
+}
+
+with the aforementioned key, yielding the PGP signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v1.0.5
+Comment: https://keybase.io/crypto
+
+yMHnAnicbZFdSBRRFMdns8IWxIUypPTBqSBp2eZj587sFvUggVGGoX2Q2TJz545O
+bTPb7qy1iaxm4pY9iClpalgW5IuJ0VP4USyyalkSqJRYgRBZuYWKqEHdkXzrvhzu
+//zO/5zDiSYlEFbL4p6UrbGh6UTLcP+vIJFPOgpKSUmXQ6S7lLyAVoOiakXI7/Or
+mkG6SVamICtR0EnLguhy8S4WsAonuhjgVHgGIMAolAs4AWkni/WAWYFtJDGAHKqO
+NfzxqDJW/8MHVxMUp4iA5WmZhYiSJAEBHkhIkaHMQxlQlAkGkF8TLyJMn5eMoBeR
+ZXYSayUqRObEZuO1vBhymETIsSrYSZ9fN3Soe3Gu2DB8brPUCPlM9jKSPP9cPJKq
+yXhvXFCC/AFV10g3jUloqKYt7aRpjgEMy9lJdMWn+pFHNQmOBwKFn9kGlWBLGSOQ
+pSTaxSpIoAEjcU5KoTinJFE8hFCCnOxkkQJ4CtGIFVxQZgTsjs0FgVFo0tzrkqaT
+boDHFIuwZUAt0kQj6MdLv+w/u56wWImNG9aZlyOsm2xr9xz8mkiUn7yf8n5hJpyq
+IsdyfGBlVJracf1JXn3e8epomi34PMVaV54dLzzVOsVtO820d9wJL21pPSPNvZ4R
+TqS/ncnxvmm0Fdpap/cvNY0+u1v1iFjMfzAW3vVqsbP76u00mJ2R01u+/KIrujcz
++cinzNjh5EMHcgvGGz7W72uKfQ8nRelIze7u2XfDNcG+usmJ+Yz5qom5LwmT3yZr
+F3K7731+ur2NPDbbMFQ5cFCrWGn52TyW2lFww6iujiVVjPTEH24uW9iZ1wQ7Gm8e
+zfJmRhID6VRbnDjXWdNTG/jDg+H2H6nWSNjyePZW/mDzh2udLX2/5yp9fZEuOE6M
+5FRk9f4Fop4cGQ==
+=qF/L
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/jbtule
+
+==================================================================
