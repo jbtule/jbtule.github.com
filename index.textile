@@ -1,7 +1,6 @@
 ---
 layout: main
-title: James (Jay) Tuley
+title: tools.tuley.name
 ---
 
-
-<script src="//about.me/embed/jbtule"></script>
+p(placeholder). tools.tuley.name &mdash; placeholder, content coming soon.
