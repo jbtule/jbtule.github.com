@@ -1,6 +1,0 @@
----
-layout: main
-title: tools.tuley.name
----
-
-p(placeholder). tools.tuley.name &mdash; placeholder, content coming soon.
