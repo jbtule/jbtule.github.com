@@ -366,7 +366,7 @@
     { id: "utils", name: "Utilities", color: "--c-utils",
       blurb: "Standalone tools that do one job." },
     { id: "explore", name: "Explorations", color: "--c-explore",
-      blurb: "Learning in public: patterns, experiments and write-ups." },
+      blurb: "Research projects, experiments and learning in public." },
     { id: "scripts", name: "Scripts", color: "--c-scripts",
       blurb: "Small automations that run from a terminal or cron." },
     { id: "school", name: "School Apps", color: "--c-school",
@@ -399,6 +399,12 @@
     { sym: "Op", name: "OOP-Patterns-in-FSharp", fam: "explore", lang: "F#", stars: 29,
       desc: "Examples of classic object-oriented patterns implemented in F#.",
       repo: "https://github.com/jbtule/OOP-Patterns-in-FSharp" },
+    { sym: "3D", name: "3DOSX Filesystem Browser", fam: "explore", lang: "Mac OS X",
+      desc: "A three-dimensional file system browser for Mac OS X, written up in ACM Crossroads (2002).",
+      more: [{ label: "ACM paper", url: "https://dl.acm.org/doi/pdf/10.1145/571758.571765" }] },
+    { sym: "Tb", name: "TrailBlazer", fam: "explore", lang: "Mac OS X",
+      desc: "A web browser built on WebKit for Mac OS X Panther that maps your browsing history in 2D with page thumbnails and summaries instead of a list of titles. Took second place at the University of Illinois Engineering Open House (2004).",
+      more: [{ label: "Slashdot", url: "https://apple.slashdot.org/story/04/03/31/0513245/making-a-better-browser-history" }] },
     { sym: "Me", name: "Modern Encryption of a String", fam: "explore", lang: "C#",
       desc: "Authenticated string encryption in C#, two ways: AES-GCM via BouncyCastle, and AES-CBC then HMAC with the built-in crypto APIs.",
       repo: "https://gist.github.com/jbtule/4336842" },
@@ -813,7 +819,7 @@
       <div class="meta">${esc(p.lang)}${p.uses ? `<br>Uses ${p.uses.map(esc).join(", ")}` : ""}${p.usedBy ? `<br>Used by ${p.usedBy.map(esc).join(", ")}` : ""}</div>
       <div class="links">
         ${p.live ? `<a href="${p.live}">Open app ↗</a>` : ""}
-        <a href="${p.repo}">${srcLabel(p)} ↗</a>
+        ${p.repo ? `<a href="${p.repo}">${srcLabel(p)} ↗</a>` : ""}
         ${moreLinks(p)}
       </div>`;
   }
@@ -872,7 +878,7 @@
           <div class="d">${esc(p.desc)}</div>
           <div class="lk">
             ${p.live ? `<a href="${p.live}">App ↗</a>` : ""}
-            <a href="${p.repo}">${srcLabel(p)} ↗</a>
+            ${p.repo ? `<a href="${p.repo}">${srcLabel(p)} ↗</a>` : ""}
             ${moreLinks(p)}
             <button type="button" data-n="${p.n}">Locate ◎</button>
           </div>
