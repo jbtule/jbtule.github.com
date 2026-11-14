@@ -386,8 +386,9 @@
       desc: "A reader and writer for NACHA (ACH bank transfer) files in .NET.",
       repo: "https://github.com/ekonbenefits/NachaSharp" },
     { sym: "Ts", name: "Tesseract.CrossPlatform-dotnet", fam: "forks", lang: "C#",
-      desc: "A fork of the .NET wrapper for tesseract-ocr that runs on Windows, Linux and macOS.",
-      repo: "https://github.com/jbtule/Tesseract.CrossPlatform-dotnet" },
+      desc: "A fork of the .NET wrapper for tesseract-ocr 5, retargeted to modern .NET and running on Windows, Linux, macOS and in the browser via WebAssembly, with self-contained native binaries on NuGet.",
+      repo: "https://github.com/jbtule/Tesseract.CrossPlatform-dotnet",
+      more: [{ label: "NuGet builds", url: "https://github.com/jbtule/tesseract-nuget-platforms" }] },
     { sym: "Op", name: "OOP-Patterns-in-FSharp", fam: "explore", lang: "F#", stars: 29,
       desc: "Examples of classic object-oriented patterns implemented in F#.",
       repo: "https://github.com/jbtule/OOP-Patterns-in-FSharp" },
@@ -731,6 +732,7 @@
   }
 
   const srcLabel = p => p.repo.includes("gist.github.com") ? "Gist" : "Source";
+  const moreLinks = p => (p.more || []).map(m => `<a href="${m.url}">${esc(m.label)} ↗</a>`).join("");
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
   function showPanel(n) {
@@ -767,6 +769,7 @@
       <div class="links">
         ${p.live ? `<a href="${p.live}">Open app ↗</a>` : ""}
         <a href="${p.repo}">${srcLabel(p)} ↗</a>
+        ${moreLinks(p)}
       </div>`;
   }
   showPanel(null);
@@ -825,6 +828,7 @@
           <div class="lk">
             ${p.live ? `<a href="${p.live}">App ↗</a>` : ""}
             <a href="${p.repo}">${srcLabel(p)} ↗</a>
+            ${moreLinks(p)}
             <button type="button" data-n="${p.n}">Locate ◎</button>
           </div>
         </div>`).join("")}
