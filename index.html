@@ -150,6 +150,7 @@
   .bond.family { stroke-width: 2.2; }
   .bond.weak { stroke-dasharray: 2 5; stroke-width: 1.4; stroke-linecap: round; }
   .bond.uses { stroke: var(--c-forks); stroke-dasharray: 9 5; stroke-width: 1.8; opacity: .85; }
+  .bond.spinoff { stroke: var(--c-scripts); stroke-dasharray: 12 4 2 4; stroke-width: 2; opacity: .9; }
   .bond.lit { stroke: var(--ink); }
   .pulse { pointer-events: none; }
 
@@ -477,12 +478,16 @@
   ];
   PROJECTS.forEach((p, i) => p.n = i + 1);
 
+  // Spin-off bonds: [parent, spin-off, why]
+  const SPINOFFS = [
+    ["Music Recommendation System for iTunes", "iEatBrainz", "recommendations needed clean, consistent song tags"],
+  ];
+
   // Dependency bonds: [user, dependency, why]
   const USES = [
     ["qr-link-pdf", "Tesseract.CrossPlatform-dotnet", "OCR, including in the browser via WebAssembly"],
     ["Legibyl", "Tesseract.CrossPlatform-dotnet", "OCR"],
     ["FSharp.Interop.Dlr", "AnyUnit", "unit tests"],
-    ["Music Recommendation System for iTunes", "iEatBrainz", "clean, consistent song tags to match listeners' libraries"],
     ["Tesseract.CrossPlatform-dotnet", "AnyUnit", "unit tests"],
     ["qr-link-pdf", "AnyUnit", "unit tests, including under WebAssembly"],
   ];
@@ -525,6 +530,13 @@
     (b.data.usedBy ||= []).push(a.data.name);
     edges.push({ a, b, kind: "uses", why });
   });
+  SPINOFFS.forEach(([pa, ch, why]) => {
+    const a = byName(pa), b = byName(ch);
+    if (!a || !b) return;
+    (a.data.spinoffs ||= []).push(b.data.name);
+    b.data.spunFrom = a.data.name;
+    edges.push({ a, b, kind: "spinoff", why });
+  });
 
   projNodes.forEach(a => projNodes.forEach(b => {
     if (a.data.n >= b.data.n || a.fam === b.fam || a.data.lang !== b.data.lang) return;
@@ -551,11 +563,11 @@
 
   edges.forEach(e => {
     e.el = el("line", { class: "bond " + e.kind }, gEdges);
-    if (e.kind === "weak" || e.kind === "uses") {
+    if (e.kind === "weak" || e.kind === "uses" || e.kind === "spinoff") {
       const t = el("title", {}, e.el);
-      t.textContent = e.kind === "weak"
-        ? `shared language: ${e.lang}`
-        : `${e.a.data.name} uses ${e.b.data.name} for ${e.why}`;
+      t.textContent = e.kind === "weak" ? `shared language: ${e.lang}`
+        : e.kind === "uses" ? `${e.a.data.name} uses ${e.b.data.name} for ${e.why}`
+        : `${e.b.data.name} spun off from ${e.a.data.name}: ${e.why}`;
     }
   });
 
@@ -643,8 +655,8 @@
     // Desktop: shift the molecule up/right a little so the panel doesn't cover it.
     const cx = W > 900 ? 120 : 0;
     const cy = W > 900 ? -10 : 20;
-    const len = { trunk: 175 * S, family: 80 * S, weak: 260 * S, uses: 150 * S };
-    const k = { trunk: .06, family: .09, weak: 0, uses: 0 }; // cross-links are drawn but exert no pull
+    const len = { trunk: 175 * S, family: 80 * S, weak: 260 * S, uses: 150 * S, spinoff: 150 * S };
+    const k = { trunk: .06, family: .09, weak: 0, uses: 0, spinoff: 0 }; // cross-links are drawn but exert no pull
 
     for (let i = 0; i < nodes.length; i++) {
       const a = nodes[i];
@@ -824,7 +836,7 @@
       panel.innerHTML = `
         <div class="fam">A molecular map</div>
         <h2>Things I've built</h2>
-        <p>The centre atom is me. Each of the seven bonded atoms is a family of projects, and each outer atom is one project. Dashed bonds show one project building on another. Dotted bonds join projects in different families that share a language. Faded atoms with broken shells are historical projects that no longer run.</p>
+        <p>The centre atom is me. Each of the seven bonded atoms is a family of projects, and each outer atom is one project. Dashed bonds show one project building on another; dash-dot bonds show a spin-off. Dotted bonds join projects in different families that share a language. Faded atoms with broken shells are historical projects that no longer run.</p>
         <div class="hint">Click an atom for details. Drag atoms to rearrange.</div>
         <div class="links"><a href="https://jay.tuley.name">About Jay ↗</a></div>`;
       return;
@@ -850,7 +862,7 @@
       <div class="fam" style="color:${c}">${esc(famById[p.fam].name)}${p.era ? ` · <span class="era">Historical, ${years(p)}</span>` : ""}${p.status ? ` · <span class="era">${esc(p.status)}</span>` : ""}</div>
       <h2>${esc(p.name)}</h2>
       <p>${esc(p.desc)}</p>
-      <div class="meta">${esc(p.lang)}${p.uses ? `<br>Uses ${p.uses.map(esc).join(", ")}` : ""}${p.usedBy ? `<br>Used by ${p.usedBy.map(esc).join(", ")}` : ""}</div>
+      <div class="meta">${esc(p.lang)}${p.uses ? `<br>Uses ${p.uses.map(esc).join(", ")}` : ""}${p.usedBy ? `<br>Used by ${p.usedBy.map(esc).join(", ")}` : ""}${p.spunFrom ? `<br>Spun off from ${esc(p.spunFrom)}` : ""}${p.spinoffs ? `<br>Spin-offs: ${p.spinoffs.map(esc).join(", ")}` : ""}</div>
       <div class="links">
         ${p.live ? `<a href="${p.live}">Open app ↗</a>` : ""}
         ${p.repo ? `<a href="${p.repo}">${srcLabel(p)} ↗</a>` : ""}
