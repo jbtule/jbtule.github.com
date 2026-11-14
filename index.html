@@ -446,7 +446,7 @@
       desc: "Finds QR codes in a PDF and adds real clickable hyperlink annotations over them.",
       repo: "https://github.com/jbtule/qr-link-pdf",
       live: "https://tools.tuley.name/qr-link-pdf/" },
-    { sym: "Np", name: "NicePlayer", fam: "utils", lang: "Objective-C", era: 2005, stars: 319,
+    { sym: "Np", name: "NicePlayer", fam: "utils", lang: "Objective-C", era: 2005, until: 2014, stars: 319,
       desc: "A fullscreen, borderless, multi-engine movie player for Mac OS X, written with Robert Chin: floating and below-desktop windows, multi-screen playback, heads-up controls, on-the-fly playlists, DVD chapters, Apple Remote and full AppleScript support.",
       repo: "https://github.com/jbtule/NicePlayer" },
     { sym: "Ie", name: "iEatBrainz", fam: "utils", lang: "Objective-C", era: 2004,
@@ -486,6 +486,7 @@
     ["qr-link-pdf", "AnyUnit", "unit tests, including under WebAssembly"],
   ];
 
+  const years = p => p.until ? `${p.era}\u2013${p.until}` : `${p.era}`;
   const famById = Object.fromEntries(FAMILIES.map(f => [f.id, f]));
   const css = getComputedStyle(document.documentElement);
   const colorOf = famId => `var(${famById[famId].color})`;
@@ -585,7 +586,7 @@
       num.textContent = n.data.n;
       const l = el("text", { class: "label", y: n.r + 15 }, g);
       const nm = n.data.short || n.data.name;
-      l.textContent = n.data.era ? `${nm} · ${n.data.era}` : nm;
+      l.textContent = n.data.era ? `${nm} · ${years(n.data)}` : nm;
     }
   });
 
@@ -845,7 +846,7 @@
         <span class="n" style="color:var(--ink-2)">${p.n}</span>${esc(p.sym)}
         ${p.stars ? `<span class="m">★${p.stars}</span>` : ""}
       </div>
-      <div class="fam" style="color:${c}">${esc(famById[p.fam].name)}${p.era ? ` · <span class="era">Historical, ${p.era}</span>` : ""}${p.status ? ` · <span class="era">${esc(p.status)}</span>` : ""}</div>
+      <div class="fam" style="color:${c}">${esc(famById[p.fam].name)}${p.era ? ` · <span class="era">Historical, ${years(p)}</span>` : ""}${p.status ? ` · <span class="era">${esc(p.status)}</span>` : ""}</div>
       <h2>${esc(p.name)}</h2>
       <p>${esc(p.desc)}</p>
       <div class="meta">${esc(p.lang)}${p.uses ? `<br>Uses ${p.uses.map(esc).join(", ")}` : ""}${p.usedBy ? `<br>Used by ${p.usedBy.map(esc).join(", ")}` : ""}</div>
@@ -909,7 +910,7 @@
       <div class="cells">${kids.map(p => `
         <div class="cell${p.era ? " historic" : ""}">
           <div class="top"><span class="sym">${esc(p.sym)}</span><span class="nm">${esc(p.name)}</span></div>
-          ${p.era ? `<div class="era">Historical · ${p.era}</div>` : ""}
+          ${p.era ? `<div class="era">Historical · ${years(p)}</div>` : ""}
           ${p.status ? `<div class="era">${esc(p.status)}</div>` : ""}
           <div class="d">${esc(p.desc)}</div>
           <div class="lk">
