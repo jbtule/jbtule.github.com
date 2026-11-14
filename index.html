@@ -19,6 +19,7 @@
     --panel: rgba(250, 248, 243, .92);
     --c-frameworks: #2f5fb3;
     --c-forks: #6b4bb0;
+    --c-ports: #9a5b2e;
     --c-explore: #b0473a;
     --c-scripts: #b97a12;
     --c-utils: #2f7d6a;
@@ -39,6 +40,7 @@
       --panel: rgba(27, 26, 23, .92);
       --c-frameworks: #7aa2ec;
       --c-forks: #a98ce6;
+      --c-ports: #d9a06f;
       --c-explore: #e8806f;
       --c-scripts: #e6b04f;
       --c-utils: #5fc2a6;
@@ -59,6 +61,7 @@
     --panel: rgba(27, 26, 23, .92);
     --c-frameworks: #7aa2ec;
     --c-forks: #a98ce6;
+    --c-ports: #d9a06f;
     --c-explore: #e8806f;
     --c-scripts: #e6b04f;
     --c-utils: #5fc2a6;
@@ -352,7 +355,7 @@
       <a href="https://github.com/jbtule">GitHub</a>
     </nav>
   </header>
-  <svg id="graph" role="img" aria-label="A molecule-like diagram: a central atom bonded to seven project families, each bonded to its projects."></svg>
+  <svg id="graph" role="img" aria-label="A molecule-like diagram: a central atom bonded to project families, each bonded to its projects."></svg>
   <aside id="panel" aria-live="polite"></aside>
 </section>
 
@@ -372,6 +375,8 @@
   const FAMILIES = [
     { id: "frameworks", name: ".NET Frameworks", color: "--c-frameworks",
       blurb: "Libraries published for other .NET developers to build on." },
+    { id: "ports", name: ".NET Ports", color: "--c-ports",
+      blurb: "Libraries from other languages, ported to .NET." },
     { id: "forks", name: ".NET Forks", color: "--c-forks",
       blurb: "Maintained forks of other people's .NET libraries." },
     { id: "utils", name: "Utilities", color: "--c-utils",
@@ -407,6 +412,13 @@
     { sym: "Na", name: "NachaSharp", fam: "frameworks", lang: "F#", stars: 11,
       desc: "A reader and writer for NACHA (ACH bank transfer) files in .NET.",
       repo: "https://github.com/ekonbenefits/NachaSharp" },
+    { sym: "Tc", name: "TitleCaseSharp", fam: "ports", lang: "F#",
+      desc: "A .NET port of Python's titlecase: smart title casing that leaves small words, acronyms and names like McTavish alone, with idiomatic APIs for both C# and F#.",
+      repo: "https://github.com/ekonbenefits/TitleCaseSharp",
+      more: [{ label: "Original (Python)", url: "https://github.com/ppannuto/python-titlecase" }] },
+    { sym: "Db", name: "DotNetDBF", fam: "ports", lang: "C#", stars: 63,
+      desc: "Reads and writes xBase DBF files (Clipper, FoxPro, dBase) in pure .NET, with no ODBC needed, plus LINQ-friendly enumeration. Derived from JavaDBF.",
+      repo: "https://github.com/ekonbenefits/dotnetdbf" },
     { sym: "Ts", name: "Tesseract.CrossPlatform-dotnet", fam: "forks", lang: "C#",
       desc: "A fork of the .NET wrapper for tesseract-ocr 5, retargeted to modern .NET and running on Windows, Linux, macOS and in the browser via WebAssembly, with self-contained native binaries on NuGet.",
       repo: "https://github.com/jbtule/Tesseract.CrossPlatform-dotnet",
@@ -665,7 +677,7 @@
     // Desktop: shift the molecule up/right a little so the panel doesn't cover it.
     const cx = W > 900 ? 120 : 0;
     const cy = W > 900 ? -10 : 20;
-    const len = { trunk: 175 * S, family: 80 * S, weak: 260 * S, uses: 150 * S, spinoff: 150 * S };
+    const len = { trunk: 175 * S * Math.sqrt(FAMILIES.length / 7), family: 80 * S, weak: 260 * S, uses: 150 * S, spinoff: 150 * S };
     const k = { trunk: .06, family: .09, weak: 0, uses: 0, spinoff: 0 }; // cross-links are drawn but exert no pull
 
     for (let i = 0; i < nodes.length; i++) {
@@ -713,7 +725,7 @@
       const f = nodeById["f:" + n.fam];
       const dx = f.x - hub.x, dy = f.y - hub.y;
       const d = Math.hypot(dx, dy) || 1;
-      n.vx += (dx / d) * .6 * S; n.vy += (dy / d) * .6 * S;
+      n.vx += (dx / d) * 1.4 * S; n.vy += (dy / d) * 1.4 * S;
     });
     // families are softly held in their slice of the circle
     FAMILIES.forEach(f => {
@@ -846,7 +858,7 @@
       panel.innerHTML = `
         <div class="fam">A molecular map</div>
         <h2>Things I've built</h2>
-        <p>The centre atom is me. Each of the seven bonded atoms is a family of projects, and each outer atom is one project. Dashed bonds show one project building on another; dash-dot bonds show a spin-off. Dotted bonds join projects in different families that share a language. Faded atoms with broken shells are historical projects that no longer run.</p>
+        <p>The centre atom is me. Each atom bonded to it is a family of projects, and each outer atom is one project. Dashed bonds show one project building on another; dash-dot bonds show a spin-off. Dotted bonds join projects in different families that share a language. Faded atoms with broken shells are historical projects that no longer run.</p>
         <div class="hint">Click an atom for details. Drag atoms to rearrange.</div>
         <div class="links"><a href="https://jay.tuley.name">About Jay ↗</a></div>`;
       return;
