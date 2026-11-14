@@ -2,32 +2,842 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>tools.tuley.name</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jay Tuley · Tools</title>
+<meta name="description" content="A molecular map of Jay Tuley's frameworks, forks, explorations, scripts, utilities and hosted web apps.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root { color-scheme: light dark; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    max-width: 36rem;
-    margin: 15vh auto 0;
-    padding: 0 1.25rem;
-    text-align: center;
-    color: #222;
-    background: #fff;
+  :root {
+    --bg: #f4f1ea;
+    --bg-2: #ebe6db;
+    --ink: #1d1b18;
+    --ink-2: #5c574e;
+    --rule: #cfc8b9;
+    --bond: #a59d8c;
+    --panel: rgba(250, 248, 243, .92);
+    --c-frameworks: #2f5fb3;
+    --c-forks: #6b4bb0;
+    --c-explore: #b0473a;
+    --c-scripts: #b97a12;
+    --c-utils: #2f7d6a;
+    --c-school: #c0487d;
+    --c-scout: #4d7a2a;
+    --hub: #1d1b18;
+    --hub-ink: #f4f1ea;
+    color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
-    body { color: #eee; background: #111; }
+    :root:not([data-theme="light"]) {
+      --bg: #12110f;
+      --bg-2: #1b1a17;
+      --ink: #ece7dc;
+      --ink-2: #a39d91;
+      --rule: #34312b;
+      --bond: #5a554b;
+      --panel: rgba(27, 26, 23, .92);
+      --c-frameworks: #7aa2ec;
+      --c-forks: #a98ce6;
+      --c-explore: #e8806f;
+      --c-scripts: #e6b04f;
+      --c-utils: #5fc2a6;
+      --c-school: #ee86b4;
+      --c-scout: #9acb6a;
+      --hub: #ece7dc;
+      --hub-ink: #12110f;
+      color-scheme: dark;
+    }
   }
+  :root[data-theme="dark"] {
+    --bg: #12110f;
+    --bg-2: #1b1a17;
+    --ink: #ece7dc;
+    --ink-2: #a39d91;
+    --rule: #34312b;
+    --bond: #5a554b;
+    --panel: rgba(27, 26, 23, .92);
+    --c-frameworks: #7aa2ec;
+    --c-forks: #a98ce6;
+    --c-explore: #e8806f;
+    --c-scripts: #e6b04f;
+    --c-utils: #5fc2a6;
+    --c-school: #ee86b4;
+    --c-scout: #9acb6a;
+    --hub: #ece7dc;
+    --hub-ink: #12110f;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+
+  /* ---------- header ---------- */
+  header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 24px;
+    pointer-events: none;
+  }
+  header > * { pointer-events: auto; }
   h1 {
+    font-family: "Fraunces", Georgia, serif;
     font-weight: 600;
-    font-size: 1.5rem;
-    margin: .25rem 0;
+    font-size: clamp(24px, 4vw, 36px);
+    line-height: 1.05;
+    margin: 0;
+    letter-spacing: -.01em;
   }
-  p { opacity: .7; }
+  h1 small {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin-top: 6px;
+  }
+  header nav {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding-top: 6px;
+  }
+  header nav a { text-decoration: none; color: var(--ink-2); }
+  header nav a:hover { color: var(--ink); }
+
+  /* ---------- graph ---------- */
+  #stage {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 50%, transparent 0 60%, var(--bg-2) 100%),
+      repeating-linear-gradient(0deg, transparent 0 31px, color-mix(in srgb, var(--rule) 35%, transparent) 31px 32px),
+      repeating-linear-gradient(90deg, transparent 0 31px, color-mix(in srgb, var(--rule) 35%, transparent) 31px 32px),
+      var(--bg);
+  }
+  svg#graph {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .bond { stroke: var(--bond); stroke-width: 1.4; fill: none; }
+  .bond.family { stroke-width: 2.2; }
+  .bond.weak { stroke-dasharray: 2 5; stroke-width: 1.4; stroke-linecap: round; }
+  .bond.lit { stroke: var(--ink); }
+  .pulse { pointer-events: none; }
+
+  .node { cursor: pointer; }
+  .node .shell { fill: var(--bg); stroke-width: 2; transition: r .2s; }
+  .node .core { stroke: none; }
+  .node .sym {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+  }
+  .node .num {
+    font-size: 8px;
+    fill: var(--ink-2);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+  .node .label {
+    font-size: 11px;
+    fill: var(--ink);
+    text-anchor: middle;
+    pointer-events: none;
+    paint-order: stroke;
+    stroke: var(--bg);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+  }
+  .node.family .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    font-weight: 600;
+  }
+  .node .orbit { fill: none; stroke-width: 1; stroke-dasharray: 1 4; opacity: .7; }
+  .node:hover .shell, .node.selected .shell { stroke-width: 3; }
+  .node.dim { opacity: .28; }
+  .bond.dim { opacity: .2; }
+  .node:focus { outline: none; }
+  .node:focus-visible .shell { stroke: var(--ink); stroke-width: 3; }
+
+  @media (max-width: 640px) {
+    .node.project .label { display: none; }
+    .node.project.selected .label, .node.project:hover .label { display: block; }
+  }
+
+  /* ---------- detail panel ---------- */
+  #panel {
+    position: absolute;
+    left: 24px;
+    bottom: 24px;
+    width: min(380px, calc(100% - 32px));
+    background: var(--panel);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid var(--rule);
+    padding: 16px 18px 18px;
+    z-index: 2;
+  }
+  #panel .tile {
+    float: left;
+    width: 64px;
+    height: 64px;
+    margin: 2px 14px 6px 0;
+    border: 2px solid var(--ink);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 24px;
+  }
+  #panel .tile .n { position: absolute; top: 2px; left: 5px; font-size: 10px; font-weight: 400; }
+  #panel .tile .m { position: absolute; bottom: 2px; right: 5px; font-size: 9px; font-weight: 400; color: var(--ink-2); }
+  #panel h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.15;
+    margin: 0 0 4px;
+    word-break: break-word;
+  }
+  #panel .fam { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-2); }
+  #panel p { margin: 10px 0 0; clear: both; color: var(--ink); }
+  #panel .meta { color: var(--ink-2); font-size: 12px; margin-top: 8px; }
+  #panel .links { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  #panel .links a {
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+  #panel .links a:hover { background: var(--ink); color: var(--bg); }
+  #panel .hint { color: var(--ink-2); font-size: 12px; margin-top: 10px; }
+
+  @media (max-width: 640px) {
+    #stage { height: auto; min-height: 0; }
+    svg#graph { height: 86vh; height: 86svh; min-height: 560px; }
+    #panel { position: static; width: auto; margin: 0 16px 16px; padding: 12px 14px 14px; }
+    #panel .tile { width: 52px; height: 52px; font-size: 20px; }
+    header { padding: 16px; }
+  }
+
+  /* ---------- index (periodic table) ---------- */
+  #index {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 64px 24px 80px;
+  }
+  #index > h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 28px;
+    margin: 0 0 4px;
+  }
+  #index > p { color: var(--ink-2); margin: 0 0 32px; }
+  .family-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .family-row h3 {
+    margin: 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .family-row h3::before {
+    content: "";
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--c);
+    flex: none;
+  }
+  .family-row .blurb { color: var(--ink-2); font-size: 12px; margin-top: 4px; }
+  .cells { display: flex; flex-wrap: wrap; gap: 10px; }
+  .cell {
+    width: 220px;
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--c);
+    padding: 10px 12px 12px;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .cell .top { display: flex; align-items: baseline; gap: 8px; }
+  .cell .sym { font-size: 20px; font-weight: 600; color: var(--c); }
+  .cell .nm { font-weight: 500; word-break: break-word; }
+  .cell .d { color: var(--ink-2); font-size: 12px; flex: 1; }
+  .cell .lk { display: flex; gap: 12px; font-size: 12px; }
+  .cell .lk a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--rule); }
+  .cell .lk a:hover { text-decoration-color: var(--ink); }
+  .cell button {
+    all: unset;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .cell button:hover { color: var(--ink); }
+  @media (max-width: 640px) {
+    #index { padding: 48px 16px 64px; }
+    .family-row { grid-template-columns: 1fr; gap: 10px; }
+    .cell { width: 100%; }
+  }
+
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 24px;
+    text-align: center;
+    color: var(--ink-2);
+    font-size: 12px;
+  }
 </style>
 </head>
 <body>
-  <h1>tools.tuley.name</h1>
-  <p>Placeholder &mdash; content coming soon.</p>
+
+<section id="stage" aria-label="Interactive map of projects">
+  <header>
+    <h1>Jay Tuley<small>frameworks · scripts · tools · apps</small></h1>
+    <nav>
+      <a href="#index">Index</a>
+      <a href="https://github.com/jbtule">GitHub</a>
+    </nav>
+  </header>
+  <svg id="graph" role="img" aria-label="A molecule-like diagram: a central atom bonded to seven project families, each bonded to its projects."></svg>
+  <aside id="panel" aria-live="polite"></aside>
+</section>
+
+<section id="index">
+  <h2>The periodic index</h2>
+  <p>Every atom in the diagram above, grouped by family.</p>
+  <div id="rows"></div>
+</section>
+
+<footer>tools.tuley.name · <a href="https://github.com/jbtule">github.com/jbtule</a></footer>
+
+<script>
+(() => {
+  // ------------------------------------------------------------------
+  // Data
+  // ------------------------------------------------------------------
+  const FAMILIES = [
+    { id: "frameworks", name: ".NET Frameworks", color: "--c-frameworks",
+      blurb: "Libraries published for other .NET developers to build on." },
+    { id: "forks", name: ".NET Forks", color: "--c-forks",
+      blurb: "Maintained forks of other people's .NET libraries." },
+    { id: "explore", name: "Explorations", color: "--c-explore",
+      blurb: "Learning in public: patterns, experiments and write-ups." },
+    { id: "scripts", name: "Scripts", color: "--c-scripts",
+      blurb: "Small automations that run from a terminal or cron." },
+    { id: "utils", name: "Utilities", color: "--c-utils",
+      blurb: "Standalone tools that do one job." },
+    { id: "school", name: "School Apps", color: "--c-school",
+      blurb: "Hosted web apps for elementary school families." },
+    { id: "scout", name: "Scout Apps", color: "--c-scout",
+      blurb: "Hosted web apps for Cub Scout Pack 3721." },
+  ];
+
+  const PROJECTS = [
+    { sym: "Kz", name: "keyczar-dotnet", fam: "frameworks", lang: "C#", stars: 55,
+      desc: "The Keyczar high-level encryption toolkit, implemented in C# and interoperable with the other Keyczar implementations.",
+      repo: "https://github.com/jbtule/keyczar-dotnet" },
+    { sym: "Ii", name: "ImpromptuInterface", fam: "frameworks", lang: "C#", stars: 680,
+      desc: "Static interface to dynamic implementation (duck casting), using the DLR combined with Reflection.Emit.",
+      repo: "https://github.com/ekonbenefits/impromptu-interface" },
+    { sym: "Au", name: "AnyUnit", fam: "frameworks", lang: "C#", stars: 8,
+      desc: "Portable class library unit tests: write once, test everywhere.",
+      repo: "https://github.com/jbtule/AnyUnit" },
+    { sym: "Na", name: "NachaSharp", fam: "frameworks", lang: "F#", stars: 11,
+      desc: "A reader and writer for NACHA (ACH bank transfer) files in .NET.",
+      repo: "https://github.com/ekonbenefits/NachaSharp" },
+    { sym: "Ts", name: "Tesseract.CrossPlatform-dotnet", fam: "forks", lang: "C#",
+      desc: "A fork of the .NET wrapper for tesseract-ocr that runs on Windows, Linux and macOS.",
+      repo: "https://github.com/jbtule/Tesseract.CrossPlatform-dotnet" },
+    { sym: "Op", name: "OOP-Patterns-in-FSharp", fam: "explore", lang: "F#", stars: 29,
+      desc: "Examples of classic object-oriented patterns implemented in F#.",
+      repo: "https://github.com/jbtule/OOP-Patterns-in-FSharp" },
+    { sym: "Me", name: "Modern Encryption of a String", fam: "explore", lang: "C#",
+      desc: "Authenticated string encryption in C#, two ways: AES-GCM via BouncyCastle, and AES-CBC then HMAC with the built-in crypto APIs.",
+      repo: "https://gist.github.com/jbtule/4336842" },
+    { sym: "Vg", name: "Cracking Vigenère", fam: "explore", lang: "Puzzle",
+      desc: "An advent-of-code-style challenge: recover encrypted song lyrics by splitting a Vigenère cipher into interleaved Caesar ciphers.",
+      repo: "https://gist.github.com/jbtule/fb7b8855cf3cdd53c654228fe2ec5833" },
+    { sym: "Yp", name: "yoto_custom_podcast", fam: "scripts", lang: "Python",
+      desc: "Two ways to get podcasts onto a Yoto Player: re-ordered custom RSS feeds, and an uploader that creates real MYO cards through the Yoto API.",
+      repo: "https://github.com/jbtule/yoto_custom_podcast" },
+    { sym: "Ys", name: "yoto-force-sleep", fam: "scripts", lang: "Python",
+      desc: "Turns on a Yoto player's sleep timer when playback starts during that player's night hours. Run it from cron; no server needed.",
+      repo: "https://github.com/jbtule/yoto-force-sleep" },
+    { sym: "Hp", name: "haveibeenpwned.fsx", fam: "scripts", lang: "F#",
+      desc: "Checks whether a password appears in Have I Been Pwned using the k-anonymity range API, so the password itself never leaves your machine.",
+      repo: "https://gist.github.com/jbtule/d98faec0abddea3d50180df54c33b617" },
+    { sym: "Cd", name: "cdto", fam: "utils", lang: "Objective-C", stars: 2431,
+      desc: "A Finder toolbar app that opens the current directory in Terminal.",
+      repo: "https://github.com/jbtule/cdto" },
+    { sym: "Qr", name: "qr-link-pdf", fam: "utils", lang: "F#",
+      desc: "Finds QR codes in a PDF and adds real clickable hyperlink annotations over them.",
+      repo: "https://github.com/jbtule/qr-link-pdf",
+      live: "https://tools.tuley.name/qr-link-pdf/" },
+    { sym: "Lg", name: "Legibyl", fam: "utils", lang: "F#",
+      desc: "PDF/UA and WCAG 2.2 accessibility checker and fixer, with a GUI and a CLI, powered by veraPDF.",
+      repo: "https://github.com/ekonbenefits/Legibyl" },
+    { sym: "Lm", name: "fix-lindbergh-school-menus", fam: "school", lang: "JavaScript",
+      desc: "An unofficial, mobile-friendly menu viewer for the Lindbergh School District.",
+      repo: "https://github.com/jbtule/fix-lindbergh-school-menus",
+      live: "https://tools.tuley.name/fix-lindbergh-school-menus/" },
+    { sym: "Sb", name: "sound-box-crosswords", fam: "school", lang: "JavaScript",
+      desc: "Sound crosswords for spelling practice.",
+      repo: "https://github.com/jbtule/sound-box-crosswords",
+      live: "https://tools.tuley.name/sound-box-crosswords/" },
+    { sym: "As", name: "CubScoutAdventureScope", fam: "scout", lang: "JavaScript",
+      desc: "Cross-references Cub Scout adventures across ranks.",
+      repo: "https://github.com/Pack3721/CubScoutAdventureScope",
+      live: "https://pack3721.github.io/CubScoutAdventureScope/" },
+    { sym: "Sf", name: "SFF", fam: "scout", lang: "JavaScript",
+      desc: "A mapping project for Scouting for Food.",
+      repo: "https://github.com/Pack3721/SFF",
+      live: "https://pack3721.github.io/SFF/" },
+  ];
+  PROJECTS.forEach((p, i) => p.n = i + 1);
+
+  const famById = Object.fromEntries(FAMILIES.map(f => [f.id, f]));
+  const css = getComputedStyle(document.documentElement);
+  const colorOf = famId => `var(${famById[famId].color})`;
+
+  // ------------------------------------------------------------------
+  // Graph model
+  // ------------------------------------------------------------------
+  const nodes = [];
+  const edges = [];
+  const RS = innerWidth < 640 ? .82 : 1; // smaller atoms on phones
+  const hub = { id: "hub", kind: "hub", r: Math.round(30 * RS) };
+  nodes.push(hub);
+  FAMILIES.forEach(f => {
+    const n = { id: "f:" + f.id, kind: "family", fam: f.id, r: Math.round(14 * RS), data: f };
+    nodes.push(n);
+    edges.push({ a: hub, b: n, kind: "trunk" });
+  });
+  const nodeById = Object.fromEntries(nodes.map(n => [n.id, n]));
+  PROJECTS.forEach(p => {
+    const n = { id: "p:" + p.n, kind: "project", fam: p.fam, r: Math.round(19 * RS), data: p };
+    nodes.push(n);
+    nodeById[n.id] = n;
+    edges.push({ a: nodeById["f:" + p.fam], b: n, kind: "family" });
+  });
+
+  // Weak (dotted) bonds: projects in different families that share a
+  // language, one bond per family pair.
+  const seenPairs = new Set();
+  const projNodes = nodes.filter(n => n.kind === "project");
+  projNodes.forEach(a => projNodes.forEach(b => {
+    if (a.data.n >= b.data.n || a.fam === b.fam || a.data.lang !== b.data.lang) return;
+    const key = [a.fam, b.fam].sort().join("|");
+    if (seenPairs.has(key)) return;
+    seenPairs.add(key);
+    edges.push({ a, b, kind: "weak", lang: a.data.lang });
+  }));
+
+  // ------------------------------------------------------------------
+  // SVG
+  // ------------------------------------------------------------------
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.getElementById("graph");
+  const el = (tag, attrs = {}, parent) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  };
+  const gEdges = el("g", {}, svg);
+  const gPulses = el("g", {}, svg);
+  const gNodes = el("g", {}, svg);
+
+  edges.forEach(e => {
+    e.el = el("line", { class: "bond " + e.kind }, gEdges);
+    if (e.kind === "weak") {
+      const t = el("title", {}, e.el);
+      t.textContent = `shared language: ${e.lang}`;
+    }
+  });
+
+  nodes.forEach(n => {
+    const g = el("g", { class: "node " + n.kind, tabindex: 0 }, gNodes);
+    n.el = g;
+    if (n.kind === "hub") {
+      g.setAttribute("aria-label", "Jay Tuley");
+      el("circle", { class: "orbit", r: n.r + 14, stroke: "var(--ink)" }, g);
+      el("circle", { class: "shell", r: n.r, stroke: "var(--hub)", style: "fill:var(--hub)" }, g);
+      const t = el("text", { class: "sym", "font-size": 18, fill: "var(--hub-ink)" }, g);
+      t.textContent = "Jt";
+    } else if (n.kind === "family") {
+      const c = colorOf(n.fam);
+      g.setAttribute("aria-label", n.data.name);
+      n.orbit = el("ellipse", { class: "orbit", rx: n.r + 12, ry: n.r + 5, stroke: c }, g);
+      el("circle", { class: "shell", r: n.r, stroke: c }, g);
+      el("circle", { class: "core", r: 5, fill: c }, g);
+      const l = el("text", { class: "label", y: n.r + 22 }, g);
+      l.textContent = n.data.name;
+    } else {
+      const c = colorOf(n.fam);
+      g.setAttribute("aria-label", n.data.name);
+      el("circle", { class: "shell", r: n.r, stroke: c }, g);
+      el("circle", { class: "core", r: n.r - 5, fill: c, opacity: .14 }, g);
+      const s = el("text", { class: "sym", "font-size": 14, fill: c, y: 1 }, g);
+      s.textContent = n.data.sym;
+      const num = el("text", { class: "num", y: -n.r + 9 }, g);
+      num.textContent = n.data.n;
+      const l = el("text", { class: "label", y: n.r + 15 }, g);
+      l.textContent = n.data.name;
+    }
+  });
+
+  // ------------------------------------------------------------------
+  // Layout / physics
+  // ------------------------------------------------------------------
+  let W = 0, H = 0, S = 1;
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function resize() {
+    const r = svg.getBoundingClientRect();
+    W = r.width; H = r.height;
+    S = Math.max(.5, Math.min(1.25, Math.min(W / (W < 640 ? 470 : 700), H / 760)));
+    svg.setAttribute("viewBox", `${-W / 2} ${-H / 2} ${W} ${H}`);
+  }
+  resize();
+  addEventListener("resize", () => { resize(); heat(.6); });
+
+  // Seed positions: families on a ring, projects fanned beyond them.
+  // Each family gets a slice of the circle proportional to its size.
+  const weight = f => projNodes.filter(p => p.fam === f.id).length + 1.5;
+  const totalW = FAMILIES.reduce((t, f) => t + weight(f), 0);
+  let acc = 0;
+  FAMILIES.forEach(f => {
+    const a = ((acc + weight(f) / 2) / totalW) * Math.PI * 2 - Math.PI / 2;
+    acc += weight(f);
+    const n = nodeById["f:" + f.id];
+    n.angle = a;
+    n.x = Math.cos(a) * 175 * S; n.y = Math.sin(a) * 175 * S;
+    const kids = projNodes.filter(p => p.fam === f.id);
+    kids.forEach((p, j) => {
+      const spread = (j - (kids.length - 1) / 2) * .5;
+      p.x = Math.cos(a + spread * .6) * 255 * S;
+      p.y = Math.sin(a + spread * .6) * 255 * S;
+    });
+  });
+  hub.x = 0; hub.y = 0;
+  nodes.forEach(n => { n.vx = 0; n.vy = 0; });
+
+  let alpha = 1;
+  const heat = v => { alpha = Math.max(alpha, v); };
+
+  function step() {
+    // Desktop: shift the molecule up/right a little so the panel doesn't cover it.
+    const cx = W > 900 ? 120 : 0;
+    const cy = W > 900 ? -10 : 20;
+    const len = { trunk: 175 * S, family: 80 * S, weak: 260 * S };
+    const k = { trunk: .06, family: .09, weak: 0 }; // language bonds are drawn but exert no pull
+
+    for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i];
+      for (let j = i + 1; j < nodes.length; j++) {
+        const b = nodes[j];
+        let dx = b.x - a.x, dy = b.y - a.y;
+        let d2 = dx * dx + dy * dy;
+        if (d2 < 1) { dx = Math.random() - .5; dy = Math.random() - .5; d2 = 1; }
+        const d = Math.sqrt(d2);
+        // family atoms push each other harder so their clusters don't interleave
+        const boost = a.kind === "family" && b.kind === "family" ? 3 : 1;
+        const f = (2600 * S * S * boost) / d2;
+        const minD = (a.r + b.r) * 1.9 * S + 16;
+        const push = d < minD ? (minD - d) * .25 : 0;
+        const fx = (dx / d) * (f + push), fy = (dy / d) * (f + push);
+        a.vx -= fx; a.vy -= fy; b.vx += fx; b.vy += fy;
+      }
+    }
+    edges.forEach(e => {
+      const dx = e.b.x - e.a.x, dy = e.b.y - e.a.y;
+      const d = Math.sqrt(dx * dx + dy * dy) || 1;
+      const f = (d - len[e.kind]) * k[e.kind];
+      const fx = (dx / d) * f, fy = (dy / d) * f;
+      e.a.vx += fx; e.a.vy += fy; e.b.vx -= fx; e.b.vy -= fy;
+    });
+    nodes.forEach(n => {
+      // gravity scaled per axis so the molecule fills tall or wide screens
+      n.vx += (cx - n.x) * .004 * Math.min(1.6, 760 / W);
+      n.vy += (cy - n.y) * .004 * Math.min(1.6, 760 / H);
+    });
+    // projects lean outward, away from the hub, along their family's direction
+    projNodes.forEach(n => {
+      const f = nodeById["f:" + n.fam];
+      const dx = f.x - hub.x, dy = f.y - hub.y;
+      const d = Math.hypot(dx, dy) || 1;
+      n.vx += (dx / d) * .6 * S; n.vy += (dy / d) * .6 * S;
+    });
+    // families are softly held in their slice of the circle
+    FAMILIES.forEach(f => {
+      const n = nodeById["f:" + f.id];
+      n.vx += (cx + Math.cos(n.angle) * len.trunk - n.x) * .2;
+      n.vy += (cy + Math.sin(n.angle) * len.trunk - n.y) * .2;
+    });
+    // hub is anchored to the centre
+    hub.vx += (cx - hub.x) * .3; hub.vy += (cy - hub.y) * .3;
+
+    const t = performance.now() / 1000;
+    nodes.forEach((n, i) => {
+      if (n.fixed) { n.vx = n.vy = 0; return; }
+      if (!reduceMotion) { // gentle "breathing"
+        n.vx += Math.sin(t * .7 + i * 1.3) * .03;
+        n.vy += Math.cos(t * .6 + i * 1.7) * .03;
+      }
+      n.vx *= .82; n.vy *= .82;
+      n.x += n.vx * Math.max(alpha, .08);
+      n.y += n.vy * Math.max(alpha, .08);
+      // keep inside the viewport
+      const m = n.r + 10;
+      n.x = Math.max(-W / 2 + m, Math.min(W / 2 - m, n.x));
+      n.y = Math.max(-H / 2 + m + 60, Math.min(H / 2 - m, n.y));
+    });
+    alpha *= .985;
+  }
+
+  function render(t) {
+    edges.forEach(e => {
+      e.el.setAttribute("x1", e.a.x); e.el.setAttribute("y1", e.a.y);
+      e.el.setAttribute("x2", e.b.x); e.el.setAttribute("y2", e.b.y);
+    });
+    nodes.forEach(n => {
+      n.el.setAttribute("transform", `translate(${n.x},${n.y})`);
+      if (n.orbit && !reduceMotion) {
+        n.orbit.setAttribute("transform", `rotate(${(t / 40 + n.angle * 57) % 360})`);
+      }
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // Neuron-style pulses travelling outward along bonds
+  // ------------------------------------------------------------------
+  const pulses = [];
+  function firePulse(from) {
+    const outs = edges.filter(e => e.a === from && e.kind !== "weak");
+    if (!outs.length) return;
+    const e = outs[Math.floor(Math.random() * outs.length)];
+    const fam = e.b.fam;
+    const c = el("circle", { class: "pulse", r: 3, fill: fam ? colorOf(fam) : "var(--ink)" }, gPulses);
+    pulses.push({ e, c, t0: performance.now(), dur: 900 + Math.random() * 400 });
+  }
+  function updatePulses(now) {
+    for (let i = pulses.length - 1; i >= 0; i--) {
+      const p = pulses[i];
+      const u = (now - p.t0) / p.dur;
+      if (u >= 1) {
+        p.c.remove();
+        pulses.splice(i, 1);
+        if (p.e.b.kind === "family" && Math.random() < .8) firePulse(p.e.b);
+        continue;
+      }
+      const ease = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+      p.c.setAttribute("cx", p.e.a.x + (p.e.b.x - p.e.a.x) * ease);
+      p.c.setAttribute("cy", p.e.a.y + (p.e.b.y - p.e.a.y) * ease);
+      p.c.setAttribute("opacity", Math.sin(u * Math.PI));
+    }
+  }
+  let lastFire = 0;
+
+  function frame(now) {
+    step();
+    render(now);
+    if (!reduceMotion && !document.hidden) {
+      if (now - lastFire > 650) { firePulse(hub); lastFire = now; }
+      updatePulses(now);
+    }
+    requestAnimationFrame(frame);
+  }
+  // Pre-settle so the first paint is already roughly arranged.
+  for (let i = 0; i < 220; i++) step();
+  alpha = .3;
+  requestAnimationFrame(frame);
+
+  // ------------------------------------------------------------------
+  // Interaction
+  // ------------------------------------------------------------------
+  const panel = document.getElementById("panel");
+  let selected = null;
+
+  function svgPoint(evt) {
+    const r = svg.getBoundingClientRect();
+    return { x: evt.clientX - r.left - W / 2, y: evt.clientY - r.top - H / 2 };
+  }
+
+  function neighbors(n) {
+    const s = new Set([n]);
+    edges.forEach(e => {
+      if (e.a === n) s.add(e.b);
+      if (e.b === n) s.add(e.a);
+    });
+    if (n.kind === "family") projNodes.filter(p => p.fam === n.fam).forEach(p => s.add(p));
+    return s;
+  }
+
+  function highlight(n) {
+    const keep = n && n.kind !== "hub" ? neighbors(n) : null;
+    nodes.forEach(m => m.el.classList.toggle("dim", !!keep && !keep.has(m)));
+    edges.forEach(e => {
+      const on = keep && keep.has(e.a) && keep.has(e.b) && (e.a === n || e.b === n);
+      e.el.classList.toggle("dim", !!keep && !on);
+      e.el.classList.toggle("lit", !!on);
+    });
+  }
+
+  function select(n) {
+    selected = n;
+    nodes.forEach(m => m.el.classList.toggle("selected", m === n));
+    highlight(n);
+    showPanel(n);
+  }
+
+  const srcLabel = p => p.repo.includes("gist.github.com") ? "Gist" : "Source";
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  function showPanel(n) {
+    if (!n || n.kind === "hub") {
+      panel.innerHTML = `
+        <div class="fam">A molecular map</div>
+        <h2>Things I've built</h2>
+        <p>The centre atom is me. Each of the seven bonded atoms is a family of projects, and each outer atom is one project. Dotted bonds join projects in different families that share a language.</p>
+        <div class="hint">Click an atom for details. Drag atoms to rearrange.</div>`;
+      return;
+    }
+    if (n.kind === "family") {
+      const f = n.data;
+      const kids = projNodes.filter(p => p.fam === f.id);
+      panel.innerHTML = `
+        <div class="tile" style="border-color:${colorOf(f.id)};color:${colorOf(f.id)}">${kids.length}</div>
+        <div class="fam">Family</div>
+        <h2>${esc(f.name)}</h2>
+        <p>${esc(f.blurb)}</p>
+        <div class="meta">${kids.map(k => esc(k.data.sym) + " " + esc(k.data.name)).join("<br>")}</div>`;
+      return;
+    }
+    const p = n.data;
+    const c = colorOf(p.fam);
+    panel.innerHTML = `
+      <div class="tile" style="border-color:${c};color:${c}">
+        <span class="n" style="color:var(--ink-2)">${p.n}</span>${esc(p.sym)}
+        ${p.stars ? `<span class="m">★${p.stars}</span>` : ""}
+      </div>
+      <div class="fam" style="color:${c}">${esc(famById[p.fam].name)}</div>
+      <h2>${esc(p.name)}</h2>
+      <p>${esc(p.desc)}</p>
+      <div class="meta">${esc(p.lang)}</div>
+      <div class="links">
+        ${p.live ? `<a href="${p.live}">Open app ↗</a>` : ""}
+        <a href="${p.repo}">${srcLabel(p)} ↗</a>
+      </div>`;
+  }
+  showPanel(null);
+
+  let drag = null;
+  nodes.forEach(n => {
+    n.el.addEventListener("pointerdown", evt => {
+      evt.preventDefault();
+      n.el.setPointerCapture(evt.pointerId);
+      const pt = svgPoint(evt);
+      drag = { n, ox: n.x - pt.x, oy: n.y - pt.y, sx: evt.clientX, sy: evt.clientY, moved: false };
+      n.fixed = true;
+    });
+    n.el.addEventListener("pointermove", evt => {
+      if (!drag || drag.n !== n) return;
+      if (Math.hypot(evt.clientX - drag.sx, evt.clientY - drag.sy) > 4) drag.moved = true;
+      if (!drag.moved) return;
+      const pt = svgPoint(evt);
+      n.x = pt.x + drag.ox; n.y = pt.y + drag.oy;
+      heat(.5);
+    });
+    const end = () => {
+      if (!drag || drag.n !== n) return;
+      n.fixed = false;
+      if (!drag.moved) select(selected === n ? null : n);
+      drag = null;
+    };
+    n.el.addEventListener("pointerup", end);
+    n.el.addEventListener("pointercancel", end);
+    n.el.addEventListener("pointerenter", () => { if (!drag && !selected) highlight(n); });
+    n.el.addEventListener("pointerleave", () => { if (!drag && !selected) highlight(null); });
+    n.el.addEventListener("keydown", evt => {
+      if (evt.key === "Enter" || evt.key === " ") { evt.preventDefault(); select(n); }
+    });
+  });
+  svg.addEventListener("pointerdown", evt => {
+    if (evt.target === svg) select(null);
+  });
+  addEventListener("keydown", evt => { if (evt.key === "Escape") select(null); });
+
+  // ------------------------------------------------------------------
+  // Periodic index
+  // ------------------------------------------------------------------
+  const rows = document.getElementById("rows");
+  FAMILIES.forEach(f => {
+    const row = document.createElement("div");
+    row.className = "family-row";
+    row.style.setProperty("--c", colorOf(f.id));
+    const kids = PROJECTS.filter(p => p.fam === f.id);
+    row.innerHTML = `
+      <div><h3>${esc(f.name)}</h3><div class="blurb">${esc(f.blurb)}</div></div>
+      <div class="cells">${kids.map(p => `
+        <div class="cell">
+          <div class="top"><span class="sym">${esc(p.sym)}</span><span class="nm">${esc(p.name)}</span></div>
+          <div class="d">${esc(p.desc)}</div>
+          <div class="lk">
+            ${p.live ? `<a href="${p.live}">App ↗</a>` : ""}
+            <a href="${p.repo}">${srcLabel(p)} ↗</a>
+            <button type="button" data-n="${p.n}">Locate ◎</button>
+          </div>
+        </div>`).join("")}
+      </div>`;
+    rows.appendChild(row);
+  });
+  rows.addEventListener("click", evt => {
+    const b = evt.target.closest("button[data-n]");
+    if (!b) return;
+    select(nodeById["p:" + b.dataset.n]);
+    document.getElementById("stage").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+  });
+})();
+</script>
 </body>
 </html>
