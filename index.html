@@ -187,6 +187,13 @@
   }
   .node .orbit { fill: none; stroke-width: 1; stroke-dasharray: 1 4; opacity: .7; }
   .node:hover .shell, .node.selected .shell { stroke-width: 3; }
+  /* historical projects: faded, broken shell, no fill, like a fossil imprint */
+  .node.historic .shell { stroke-dasharray: 3 3.2; fill: var(--bg); }
+  .node.historic .core { opacity: 0 !important; }
+  .node.historic .sym { opacity: .65; }
+  .node.historic { filter: saturate(.35); }
+  .node.historic .label { fill: var(--ink-2); font-style: italic; }
+  #panel .era { color: var(--ink-2); }
   .node.dim { opacity: .28; }
   .bond.dim { opacity: .2; }
   .node:focus { outline: none; }
@@ -304,6 +311,9 @@
   }
   .cell .top { display: flex; align-items: baseline; gap: 8px; }
   .cell .sym { font-size: 20px; font-weight: 600; color: var(--c); }
+  .cell.historic { border-style: dashed; border-top-style: dashed; background: transparent; }
+  .cell.historic .sym { opacity: .65; }
+  .cell .era { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-2); }
   .cell .nm { font-weight: 500; word-break: break-word; }
   .cell .d { color: var(--ink-2); font-size: 12px; flex: 1; }
   .cell .lk { display: flex; gap: 12px; font-size: 12px; }
@@ -399,12 +409,18 @@
     { sym: "Op", name: "OOP-Patterns-in-FSharp", fam: "explore", lang: "F#", stars: 29,
       desc: "Examples of classic object-oriented patterns implemented in F#.",
       repo: "https://github.com/jbtule/OOP-Patterns-in-FSharp" },
-    { sym: "3D", name: "3DOSX Filesystem Browser", fam: "explore", lang: "Mac OS X",
+    { sym: "Dl", name: "FSharp.Interop.Dlr", fam: "explore", lang: "F#", status: "Experimental",
+      desc: "A dlr { } block for F#: dynamic member access with ?, compiled once per block into DLR call sites. A .NET library, but very experimental for now.",
+      repo: "https://github.com/ekonbenefits/FSharp.Interop.Dlr" },
+    { sym: "3D", name: "3DOSX Filesystem Browser", fam: "explore", lang: "Objective-C", era: 2002,
       desc: "A three-dimensional file system browser for Mac OS X. Robert Chin's 2002 ACM Crossroads article on it credits Jay as a collaborator.",
       more: [{ label: "ACM paper", url: "https://dl.acm.org/doi/pdf/10.1145/571758.571765" }] },
-    { sym: "Tb", name: "TrailBlazer", fam: "explore", lang: "Mac OS X",
-      desc: "A web browser built on WebKit for Mac OS X Panther that maps your browsing history in 2D with page thumbnails and summaries instead of a list of titles. Took second place at the University of Illinois Engineering Open House (2004).",
+    { sym: "Tb", name: "TrailBlazer", fam: "explore", lang: "Objective-C", era: 2004,
+      desc: "A web browser built on WebKit for Mac OS X Panther that maps your browsing history in 2D with page thumbnails and summaries instead of a list of titles. Took second place at the University of Illinois Engineering Open House.",
       more: [{ label: "Slashdot", url: "https://apple.slashdot.org/story/04/03/31/0513245/making-a-better-browser-history" }] },
+    { sym: "Mr", name: "Music Recommendation System for iTunes", short: "iTunes MRS", fam: "explore", lang: "Mac + Windows", era: 2004,
+      desc: "\u201ciCame, iSaw, iListened.\u201d Mac and Windows clients sent your iTunes ratings (or play counts) to a server that matched you with similar listeners using Pearson-correlation collaborative filtering. A University of Illinois student project that grew to about 1,500 users and 250,000 songs.",
+      more: [{ label: "Archived site", url: "https://web.archive.org/web/20040418232153/http://music.cs.uiuc.edu/" }] },
     { sym: "Me", name: "Modern Encryption of a String", fam: "explore", lang: "C#",
       desc: "Authenticated string encryption in C#, two ways: AES-GCM via BouncyCastle, and AES-CBC then HMAC with the built-in crypto APIs.",
       repo: "https://gist.github.com/jbtule/4336842" },
@@ -453,6 +469,9 @@
   const USES = [
     ["qr-link-pdf", "Tesseract.CrossPlatform-dotnet", "OCR, including in the browser via WebAssembly"],
     ["Legibyl", "Tesseract.CrossPlatform-dotnet", "OCR"],
+    ["FSharp.Interop.Dlr", "AnyUnit", "unit tests"],
+    ["Tesseract.CrossPlatform-dotnet", "AnyUnit", "unit tests"],
+    ["qr-link-pdf", "AnyUnit", "unit tests, including under WebAssembly"],
   ];
 
   const famById = Object.fromEntries(FAMILIES.map(f => [f.id, f]));
@@ -527,7 +546,7 @@
   });
 
   nodes.forEach(n => {
-    const g = el("g", { class: "node " + n.kind, tabindex: 0 }, gNodes);
+    const g = el("g", { class: "node " + n.kind + (n.data && n.data.era ? " historic" : ""), tabindex: 0 }, gNodes);
     n.el = g;
     if (n.kind === "hub") {
       g.setAttribute("aria-label", "Jay Tuley");
@@ -553,7 +572,8 @@
       const num = el("text", { class: "num", y: -n.r + 9 }, g);
       num.textContent = n.data.n;
       const l = el("text", { class: "label", y: n.r + 15 }, g);
-      l.textContent = n.data.name;
+      const nm = n.data.short || n.data.name;
+      l.textContent = n.data.era ? `${nm} · ${n.data.era}` : nm;
     }
   });
 
@@ -610,7 +630,7 @@
     const cx = W > 900 ? 120 : 0;
     const cy = W > 900 ? -10 : 20;
     const len = { trunk: 175 * S, family: 80 * S, weak: 260 * S, uses: 150 * S };
-    const k = { trunk: .06, family: .09, weak: 0, uses: .015 }; // language bonds are drawn but exert no pull
+    const k = { trunk: .06, family: .09, weak: 0, uses: 0 }; // cross-links are drawn but exert no pull
 
     for (let i = 0; i < nodes.length; i++) {
       const a = nodes[i];
@@ -671,7 +691,7 @@
     const t = performance.now() / 1000;
     nodes.forEach((n, i) => {
       if (n.fixed) { n.vx = n.vy = 0; return; }
-      if (!reduceMotion) { // gentle "breathing"
+      if (!reduceMotion && !(n.data && n.data.era)) { // gentle "breathing"; historic atoms stay still
         n.vx += Math.sin(t * .7 + i * 1.3) * .03;
         n.vy += Math.cos(t * .6 + i * 1.7) * .03;
       }
@@ -704,7 +724,7 @@
   // ------------------------------------------------------------------
   const pulses = [];
   function firePulse(from) {
-    const outs = edges.filter(e => e.a === from && e.kind !== "weak");
+    const outs = edges.filter(e => e.a === from && e.kind === (from === hub ? "trunk" : "family") && !e.b.data?.era);
     if (!outs.length) return;
     const e = outs[Math.floor(Math.random() * outs.length)];
     const fam = e.b.fam;
@@ -790,7 +810,7 @@
       panel.innerHTML = `
         <div class="fam">A molecular map</div>
         <h2>Things I've built</h2>
-        <p>The centre atom is me. Each of the seven bonded atoms is a family of projects, and each outer atom is one project. Dashed bonds show one project building on another. Dotted bonds join projects in different families that share a language.</p>
+        <p>The centre atom is me. Each of the seven bonded atoms is a family of projects, and each outer atom is one project. Dashed bonds show one project building on another. Dotted bonds join projects in different families that share a language. Faded atoms with broken shells are historical projects that no longer run.</p>
         <div class="hint">Click an atom for details. Drag atoms to rearrange.</div>
         <div class="links"><a href="https://jay.tuley.name">About Jay ↗</a></div>`;
       return;
@@ -813,7 +833,7 @@
         <span class="n" style="color:var(--ink-2)">${p.n}</span>${esc(p.sym)}
         ${p.stars ? `<span class="m">★${p.stars}</span>` : ""}
       </div>
-      <div class="fam" style="color:${c}">${esc(famById[p.fam].name)}</div>
+      <div class="fam" style="color:${c}">${esc(famById[p.fam].name)}${p.era ? ` · <span class="era">Historical, ${p.era}</span>` : ""}${p.status ? ` · <span class="era">${esc(p.status)}</span>` : ""}</div>
       <h2>${esc(p.name)}</h2>
       <p>${esc(p.desc)}</p>
       <div class="meta">${esc(p.lang)}${p.uses ? `<br>Uses ${p.uses.map(esc).join(", ")}` : ""}${p.usedBy ? `<br>Used by ${p.usedBy.map(esc).join(", ")}` : ""}</div>
@@ -869,12 +889,16 @@
     const row = document.createElement("div");
     row.className = "family-row";
     row.style.setProperty("--c", colorOf(f.id));
-    const kids = PROJECTS.filter(p => p.fam === f.id);
+    // current projects first, historical ones after (oldest last)
+    const kids = PROJECTS.filter(p => p.fam === f.id)
+      .sort((a, b) => (b.era ? 0 : 1) - (a.era ? 0 : 1) || (b.era || 0) - (a.era || 0));
     row.innerHTML = `
       <div><h3>${esc(f.name)}</h3><div class="blurb">${esc(f.blurb)}</div></div>
       <div class="cells">${kids.map(p => `
-        <div class="cell">
+        <div class="cell${p.era ? " historic" : ""}">
           <div class="top"><span class="sym">${esc(p.sym)}</span><span class="nm">${esc(p.name)}</span></div>
+          ${p.era ? `<div class="era">Historical · ${p.era}</div>` : ""}
+          ${p.status ? `<div class="era">${esc(p.status)}</div>` : ""}
           <div class="d">${esc(p.desc)}</div>
           <div class="lk">
             ${p.live ? `<a href="${p.live}">App ↗</a>` : ""}
