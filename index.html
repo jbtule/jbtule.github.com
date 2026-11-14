@@ -400,6 +400,10 @@
       desc: "Automatically generated, composable inline F# functions for the static methods of the .NET base class library.",
       repo: "https://github.com/jbtule/FSharp.Interop.Compose",
       more: [{ label: "Docs", url: "https://tools.tuley.name/FSharp.Interop.Compose/" }] },
+    { sym: "Fd", name: "FSharp.Interop.Dynamic", fam: "frameworks", lang: "F#", stars: 98,
+      desc: "DLR interop for F#: the ? operator works like C#'s dynamic keyword.",
+      repo: "https://github.com/fsprojects/FSharp.Interop.Dynamic",
+      more: [{ label: "Docs", url: "https://fsprojects.github.io/FSharp.Interop.Dynamic/" }] },
     { sym: "Na", name: "NachaSharp", fam: "frameworks", lang: "F#", stars: 11,
       desc: "A reader and writer for NACHA (ACH bank transfer) files in .NET.",
       repo: "https://github.com/ekonbenefits/NachaSharp" },
@@ -410,6 +414,9 @@
     { sym: "Op", name: "OOP-Patterns-in-FSharp", fam: "explore", lang: "F#", stars: 29,
       desc: "Examples of classic object-oriented patterns implemented in F#.",
       repo: "https://github.com/jbtule/OOP-Patterns-in-FSharp" },
+    { sym: "Dy", name: "Dynamitey", fam: "explore", lang: "C#", stars: 367,
+      desc: "(Pronounced dyna-mighty.) Flexes DLR muscle to do meta-mazing things in .NET: fast dynamic invocation by name, currying, duck typing and dynamic object building.",
+      repo: "https://github.com/ekonbenefits/dynamitey" },
     { sym: "Dl", name: "FSharp.Interop.Dlr", fam: "explore", lang: "F#", status: "Experimental",
       desc: "A dlr { } block for F#: dynamic member access with ?, compiled once per block into DLR call sites. A .NET library, but very experimental for now.",
       repo: "https://github.com/ekonbenefits/FSharp.Interop.Dlr" },
@@ -481,6 +488,8 @@
   // Spin-off bonds: [parent, spin-off, why]
   const SPINOFFS = [
     ["Music Recommendation System for iTunes", "iEatBrainz", "recommendations needed clean, consistent song tags"],
+    ["ImpromptuInterface", "Dynamitey", "its dynamic invocation core became a library of its own"],
+    ["Dynamitey", "FSharp.Interop.Dynamic", "brings Dynamitey's DLR calls to F#"],
   ];
 
   // Dependency bonds: [user, dependency, why]
